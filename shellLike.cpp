@@ -8,19 +8,21 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <vector>
 
 using namespace std;
 
 void printPrompt( );
 void getInput( char & );
-void parser( char *, char * );
-bool cmd( );
+void parser( char &, vector<string> *, char ** );
+bool cmd( vector<string> ** );
 
 int main( )
 {
     int maxSize = 30;
     char theString[maxSize];
     char *input[maxSize];
+    vector<string> coins;
     char *theUser;
     char nameAndLocation[maxSize];
     char *tok;
@@ -31,6 +33,7 @@ int main( )
         cout.flush( );
         printPrompt( );
         getInput( *theString );
+
         //parser();
         //fgets( theString, maxSize, stdin );
         //cin.getline( theString, maxSize );
@@ -38,14 +41,16 @@ int main( )
         while ( strcmp( theString, "\0") == 0 )
         {
             printPrompt( );
-            cin.getline( theString, maxSize );
+            getInput( *theString );
+            //cin.getline( theString, maxSize );
             cin.clear( );
             cin.sync( );
         }
 
-        //pid_t pid = fork( );
 
-        /*
+        parser( *theString, &coins, input );
+        //cmd( coins );
+                /*
         if ( command == "ls" )
         {
             pid_t pid = fork( );
@@ -87,9 +92,6 @@ int main( )
         }
         */
 
-        cin.clear( );
-        cin.sync( );
-        cout.flush( );
     }
 
     return 0;
@@ -116,20 +118,41 @@ void getInput( char & getLine )
     fgets( &getLine, 30, stdin );
 }
 
-void parser( char *getLine, char *theInput )
+void parser( char & getLine, vector<string> * theInput, char ** thisOne )
 {
     char *tok;
-    tok = strtok( getLine, " ");
+    vector<string> testingInput;
+    tok = strtok( &getLine, " ");
+
+    string temp(tok);
     string command;
 
     while ( tok != NULL )
     {
-        command = tok;
+        theInput->push_back( tok );
+        if ( tok != '\0' )
+            cout << tok;
+
+        *thisOne++ = tok;
+        //*thisOne++;
+        tok = strtok( NULL, " " );
+
     }
-        //
+
+    /*
+    for ( unsigned int i = 0; i < theInput->size( ); i++ )
+    {
+        cout << theInput->at(i) << endl;
+    }
+    */
+
+    cout << "testing: " << **thisOne << " " << endl;
 }
 
-bool cmd( )
+bool cmd( vector<string> ** commands )
 {
+    pid_t pid = fork( );
 
+    //if ( pid == 0 )
+       // execvp( **commands, commands );
 }
