@@ -11,29 +11,29 @@
 
 using namespace std;
 
-
-using namespace std;
-
-
 void printPrompt( );
+void getInput( char & );
+void parser( char *, char * );
+bool cmd( );
 
 int main( )
 {
     int maxSize = 30;
     char theString[maxSize];
+    char *input[maxSize];
     char *theUser;
     char nameAndLocation[maxSize];
     char *tok;
-    string shellPrompt = "$ - ";
-    string exitFlag = "ok";
     string command;
 
     while ( command != "exit" )
     {
         cout.flush( );
         printPrompt( );
+        getInput( *theString );
+        //parser();
         //fgets( theString, maxSize, stdin );
-        cin.getline( theString, maxSize );
+        //cin.getline( theString, maxSize );
 
         while ( strcmp( theString, "\0") == 0 )
         {
@@ -43,10 +43,9 @@ int main( )
             cin.sync( );
         }
 
-        tok = strtok( theString, " ");
-        command = tok;
         //pid_t pid = fork( );
 
+        /*
         if ( command == "ls" )
         {
             pid_t pid = fork( );
@@ -86,6 +85,7 @@ int main( )
 
             waitpid( pid, NULL, 0 );
         }
+        */
 
         cin.clear( );
         cin.sync( );
@@ -108,5 +108,28 @@ void printPrompt( )
     gethostname( hostAndLocation, maxSize );
 
     cout << theUser << '@' << hostAndLocation << " $ ";
+
+}
+
+void getInput( char & getLine )
+{
+    fgets( &getLine, 30, stdin );
+}
+
+void parser( char *getLine, char *theInput )
+{
+    char *tok;
+    tok = strtok( getLine, " ");
+    string command;
+
+    while ( tok != NULL )
+    {
+        command = tok;
+    }
+        //
+}
+
+bool cmd( )
+{
 
 }
