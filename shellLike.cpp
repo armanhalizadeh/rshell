@@ -11,12 +11,18 @@
 
 using namespace std;
 
+
+using namespace std;
+
+
 void printPrompt( );
 
 int main( )
 {
     int maxSize = 30;
     char theString[maxSize];
+    char *theUser;
+    char nameAndLocation[maxSize];
     char *tok;
     string shellPrompt = "$ - ";
     string exitFlag = "ok";
