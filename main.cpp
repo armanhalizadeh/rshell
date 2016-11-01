@@ -27,36 +27,43 @@ char* getInput()
   return input;
 }
 
+//creates tree of command connectors by parsing the entered line
 cmdBase* parse(char* input)
 {
-  char* command1 = strtok(input, ";");
+  char* command1 = strtok(input, "#"); //removes everything thats a comment
+
+  command1 = strtok(command1, ";"); //finds first semicolon
   char* command2 = strtok(NULL, "\0");
-  if (command2 != NULL)
+  if (command2 != NULL) //if semicolon was found
   {
+    //create semi connector by parsing left side and right side
     cmdSemi* tmp = new cmdSemi(parse(command1), parse(command2));
     return tmp;
   }
-  else
+  else //no semicolon found
   {
-    char* lastAnd = strrchr(command1, '&');
-    char* lastOr = strrchr(command1, '|');
-    // if there is && but no || or if && is after ||
+    //tree must be built with last connector having highest priority
+    char* lastAnd = strrchr(command1, '&'); //returns ptr to last &
+    char* lastOr = strrchr(command1, '|'); //returns ptr to last |
+    //if there is && but no || or if && is after ||
     if (lastAnd != '\0' && (lastOr == '\0' || strlen(lastAnd) < strlen(lastOr)))
     {
-      lastAnd[-1] = '\0';
+      lastAnd[-1] = '\0'; //make last && into NULL
       lastAnd[0] = '\0';
-      command2 = &lastAnd[1];
+      command2 = &lastAnd[1]; //set right side to after last &
       cmdAnd* tmp = new cmdAnd(parse(command1), parse(command2));
       return tmp;
     }
+    //if there is || but no && or if || is after &&
     else if (lastOr != '\0' && (lastAnd == '\0' || strlen(lastOr) < strlen(lastAnd)))
     {
-      lastOr[-1] = '\0';
+      lastOr[-1] = '\0'; //make last || into NULL
       lastOr[0] = '\0';
-      command2 = &lastOr[1];
+      command2 = &lastOr[1]; //set right side to after last |
       cmdOr* tmp = new cmdOr(parse(command1), parse(command2));
       return tmp;
     }
+    //if no && or || commands found
     else if (lastAnd == '\0' && lastOr == '\0')
     {
       cmdExecutable* tmp = new cmdExecutable(command1);
