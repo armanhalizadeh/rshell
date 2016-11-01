@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string>
 #include <string.h>
+#include <unistd.h>
 #include "cmdAnd.h"
 #include "cmdOr.h"
 #include "cmdBase.h"
@@ -12,20 +13,20 @@ using namespace std;
 
 // prints the prompt for the user
 // displays the user name and host name
-void printPrompt( )
+void printPrompt(char* user)
 {
-    char *User;
+    //char *User;
     char host[30];
 
-    User = getlogin( );
+    //User = getlogin( );
     gethostname( host, 30 );
 
-    cout << User << "@" << host << " $ ";
+    cout << user << "@" << host << "$ ";
 }
 
 
 //takes in user input and returns the char*
-char* getInput()
+char* getInput(char* user)
 {
   //takes in user input as string w/ getline
   string temp;
@@ -35,7 +36,7 @@ char* getInput()
   //print the prompt and wait for user input
   while ( temp.empty( ) )
   {
-      printPrompt( );
+      printPrompt(user);
       getline( cin, temp );
   }
 
@@ -96,8 +97,13 @@ cmdBase* parse(char* input)
 
 int main()
 {
-    printPrompt( );
-  char* userInput = getInput();
-  cmdBase* head = parse(userInput);
-  head->execute();
+  char* user = getlogin();
+  while(true)
+  {
+    printPrompt(user);
+    char* userInput = getInput(user);
+    cmdBase* head = parse(userInput);
+    head->execute();
+    delete userInput;
+  }
 }

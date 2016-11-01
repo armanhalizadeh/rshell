@@ -11,9 +11,10 @@ class cmdExecutable: public cmdBase
 {
   private:
     char* executable;
-    vector<char*> args;
+    char* args[];
   public:
     cmdExecutable(char*);
+    ~cmdExecutable();
     bool execute();
 };
 

@@ -10,26 +10,33 @@ cmdExecutable::cmdExecutable(char* command)
 {
   executable = strtok(command, " ");
   command = strtok(NULL, " ");
+  args[0] = executable;
+  int i = 1;
   while (command != NULL)
   {
-    args.push_back(command);
+    args[i] = command;
     command = strtok(NULL, " ");
+    i++;
   }
+  args[i] = NULL;
 }
+
+cmdExecutable::~cmdExecutable()
+{}
 
 bool cmdExecutable::execute()
 {
-  cout << executable;
-  for (int i = 0, n = args.size(); i < n; i++)
-  {
-    cout << ' ' << args.at(i);
-  }
-  cout << endl;
+  //cout << executable;
+  //for (int i = 0, n = args.size(); i < n; i++)
+  //{
+  //  cout << ' ' << args.at(i);
+  //}
+  //cout << endl;
 
     // to remove - jonathan
     // Hard coded example
     // need to find a way to get argv to be of char * const
-    char *const tmp[] = { "testing", NULL};
+    //char *const tmp[] = { , NULL};
 
     pid_t pid = fork( );
 
@@ -44,7 +51,7 @@ bool cmdExecutable::execute()
     // to do - checking if the executable failed ( returns -1 )
 
     if ( pid == 0 )
-        execvp( executable, tmp );
+        execvp( executable, args );
 
     // may have to change to wait( )
     waitpid( pid, NULL, 0 );
