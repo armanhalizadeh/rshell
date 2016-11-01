@@ -40,8 +40,8 @@ cmdBase* parse(char* input)
   {
     char* lastAnd = strrchr(command1, '&');
     char* lastOr = strrchr(command1, '|');
-    if there is && but no || or if && is after ||
-    if (lastAnd[0] != '\0' && (lastOr[0] == '\0' || strlen(lastAnd) < strlen(lastOr)))
+    // if there is && but no || or if && is after ||
+    if (lastAnd != '\0' && (lastOr == '\0' || strlen(lastAnd) < strlen(lastOr)))
     {
       lastAnd[-1] = '\0';
       lastAnd[0] = '\0';
@@ -49,7 +49,7 @@ cmdBase* parse(char* input)
       cmdAnd* tmp = new cmdAnd(parse(command1), parse(command2));
       return tmp;
     }
-    else if (lastOr[0] != '\0' && (lastAnd[0] == '\0' || strlen(lastOr) < strlen(lastAnd)))
+    else if (lastOr != '\0' && (lastAnd == '\0' || strlen(lastOr) < strlen(lastAnd)))
     {
       lastOr[-1] = '\0';
       lastOr[0] = '\0';
@@ -57,7 +57,7 @@ cmdBase* parse(char* input)
       cmdOr* tmp = new cmdOr(parse(command1), parse(command2));
       return tmp;
     }
-    else if (lastAnd[0] == '\0' && lastOr[0] == '\0')
+    else if (lastAnd == '\0' && lastOr == '\0')
     {
       cmdExecutable* tmp = new cmdExecutable(command1);
       return tmp;
@@ -69,4 +69,5 @@ int main()
 {
   char* userInput = getInput();
   cmdBase* head = parse(userInput);
+  head->execute();
 }

@@ -6,10 +6,11 @@ using namespace std;
 cmdExecutable::cmdExecutable(char* command)
 {
   executable = strtok(command, " ");
+  command = strtok(NULL, " ");
   while (command != NULL)
   {
-    command = strtok(NULL, " ");
     args.push_back(command);
+    command = strtok(NULL, " ");
   }
 }
 
