@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -26,13 +27,11 @@ cmdExecutable::cmdExecutable(char* command)
 
 bool cmdExecutable::execute()
 {
-  //cout << executable;
-  //for (int i = 0, n = args.size(); i < n; i++)
-  //{
-  //  cout << ' ' << args.at(i);
-  //}
-  //cout << endl;
-
+    if (strcmp(executable, "exit") == 0)
+    {
+        exit(0);
+    }
+    
     // to remove - jonathan
     // Hard coded example
     // need to find a way to get argv to be of char * const
