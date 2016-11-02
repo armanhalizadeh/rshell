@@ -1,0 +1,5 @@
+Problems
+
+multi prompt in one line
+infinite prompts when the shell scripts lack exit - may be intentional
+executing a file that does not exist should not count as true - may be working properly
