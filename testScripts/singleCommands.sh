@@ -3,8 +3,7 @@
 echo "Single command test"
 echo 
 
-../bin/rshell<<EOF
-
+./bin/rshell<<EOF
 pwd
 date
 echo hey

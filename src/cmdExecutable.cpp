@@ -55,16 +55,20 @@ bool cmdExecutable::execute()
     {
         cmdStatus = execvp( executable, args );
     }
+
     else if( pid < 0 )
     {
         cout << "Error: fork failed" << endl;
     }
+
     else
     {    
         // may have to change to wait( )
-        waitpid(pid, &status, 0);
-        //waitpid( pid, NULL, 0 );
+        //waitpid(pid, &status, 0);
+        while( wait( &status ) != pid )
+            ;
     }
+
     if (cmdStatus == -1)
     {
         return false;
