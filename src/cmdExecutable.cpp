@@ -56,15 +56,17 @@ bool cmdExecutable::execute()
         //if command does not successfully run
         exit(EXIT_FAILURE);
     }
+
     else if( pid < 0 )
     {
         cout << "Error: fork failed" << endl;
     }
+
     else
     {    
         // may have to change to wait( )
-        waitpid(pid, &status, 0);
-        //waitpid( pid, NULL, 0 );
+        //waitpid(pid, &status, 0);
+        while( wait( &status ) != pid ) ;
     }
     if (status != 0)
     {

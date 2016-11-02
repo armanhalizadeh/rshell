@@ -1,11 +1,10 @@
 #!/bin/sh
 
-../bin/rshell<<EOF
-
+./bin/rshell<<EOF
 ./singleCommands.sh
 ./multiCommands.sh
-./comments.sh
-./complicated.sh
+./commentCommands.sh
+./complicatedCommands.sh
 ./doesntexist.sh && ./singleCommands.sh
 exit
 EOF
