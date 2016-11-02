@@ -4,6 +4,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <string>
 
 using namespace std;
 
@@ -54,19 +56,22 @@ bool cmdExecutable::execute()
     {
         execvp( executable, args );
         //if command does not successfully run
+        string execvpFail = string(executable);
+        execvpFail += " failed";
+        perror( execvpFail.c_str() );
         exit(EXIT_FAILURE);
     }
 
     else if( pid < 0 )
     {
-        cout << "Error: fork failed" << endl;
+        perror( "fork failed" );
     }
 
     else
     {    
         // may have to change to wait( )
-        //waitpid(pid, &status, 0);
-        while( wait( &status ) != pid ) ;
+        waitpid(pid, &status, 0);
+        //while( wait( &status ) != pid ) ;
     }
     if (status != 0)
     {

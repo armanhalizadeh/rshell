@@ -34,8 +34,14 @@ char* getInput()
 
   //if user entered nothing
   //print the prompt and wait for user input
-  while ( temp.empty( ) )
+  while ( temp.empty( ) || temp[0] == '&' || 
+      temp[0] == '|' || temp[0] == ';')
   {
+      if (temp[0] == '&' || temp[0] == '|' || temp[0] == ';')
+      {
+          cout << "syntax error near unexpected token '" 
+              << temp[0] << "'" << endl;
+      }
       printPrompt();
       getline( cin, temp );
   }
@@ -53,6 +59,8 @@ char* getInput()
 //creates tree of command connectors by parsing the entered line
 cmdBase* parse(char* input)
 {
+  
+
   char* command1 = strtok(input, "#"); //removes everything thats a comment
 
   command1 = strtok(command1, ";"); //finds first semicolon
