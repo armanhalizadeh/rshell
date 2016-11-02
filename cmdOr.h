@@ -13,9 +13,15 @@ class cmdOr: public cmdBase
     cmdOr(cmdBase* l, cmdBase* r): left(l), right(r) {};
     bool execute()
     {
-      left->execute();
-      right->execute();
-      return true;
+      if(left->execute())
+      {
+          return true;
+      }
+      else if(right->execute())
+      {
+          return true;
+      }
+      return false;
     }
 };
 

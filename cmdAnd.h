@@ -13,9 +13,18 @@ class cmdAnd: public cmdBase
     cmdAnd(cmdBase* l, cmdBase* r): left(l), right(r) {};
     bool execute()
     {
-      left->execute();
-      right->execute();
-      return true;
+      if (!left->execute())
+      {
+          return false;
+      }
+      else if (!right->execute())
+      {
+          return false;
+      }
+      else
+      {
+          return true;
+      }
     }
 };
 

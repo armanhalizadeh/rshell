@@ -39,7 +39,7 @@ bool cmdExecutable::execute()
     //char *const tmp[] = { , NULL};
 
     pid_t pid = fork( );
-    int status;
+    int status, cmdStatus;
 
 
     // first arguement is the command
@@ -54,7 +54,7 @@ bool cmdExecutable::execute()
 
     if ( pid == 0 )
     {
-        execvp( executable, args );
+        cmdStatus = execvp( executable, args );
     }
     else if( pid < 0 )
     {
@@ -66,5 +66,12 @@ bool cmdExecutable::execute()
         waitpid(pid, &status, 0);
         //waitpid( pid, NULL, 0 );
     }
-  return true;
-}
+    if (cmdStatus == -1)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+ }
