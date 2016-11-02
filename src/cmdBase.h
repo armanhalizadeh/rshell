@@ -5,6 +5,7 @@ class cmdBase
 {
   public:
     cmdBase() {};
+    virtual ~cmdBase() {};
     virtual bool execute() = 0;
 };
 

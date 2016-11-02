@@ -104,5 +104,6 @@ int main()
     char* userInput = getInput();
     cmdBase* head = parse(userInput);
     head->execute();
+    delete head;
   }
 }

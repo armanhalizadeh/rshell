@@ -38,8 +38,7 @@ bool cmdExecutable::execute()
     //char *const tmp[] = { , NULL};
 
     pid_t pid = fork( );
-    int status, cmdStatus;
-
+    int status;
 
     // first arguement is the command
     // second argument is a pointer to an array of pointers to
@@ -53,7 +52,9 @@ bool cmdExecutable::execute()
 
     if ( pid == 0 )
     {
-        cmdStatus = execvp( executable, args );
+        execvp( executable, args );
+        //if command does not successfully run
+        exit(EXIT_FAILURE);
     }
     else if( pid < 0 )
     {
@@ -65,7 +66,7 @@ bool cmdExecutable::execute()
         waitpid(pid, &status, 0);
         //waitpid( pid, NULL, 0 );
     }
-    if (cmdStatus == -1)
+    if (status != 0)
     {
         return false;
     }

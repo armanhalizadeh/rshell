@@ -11,6 +11,11 @@ class cmdAnd: public cmdBase
     cmdBase* right;
   public:
     cmdAnd(cmdBase* l, cmdBase* r): left(l), right(r) {};
+    ~cmdAnd()
+    {
+        delete left;
+        delete right;
+    }
     bool execute()
     {
       if (!left->execute())

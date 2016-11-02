@@ -1,7 +1,7 @@
 #defining compiler
 CC = g++
 #defining flasgs
-CFLAGS = -Wall -Werror -ansi -pedantic
+CFLAGS = -ggdb -Wall -Werror -ansi -pedantic
 #define sources
 SRC = $(wildcard src/*.cpp)
 OBJ = $(subst src/,bin/,$(subst .cpp,.o,$(SRC)))
