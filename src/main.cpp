@@ -87,7 +87,7 @@ cmdBase* parse(char* input)
       return tmp;
     }
     //if no && or || commands found
-    else if (lastAnd == '\0' && lastOr == '\0')
+    else //if (lastAnd == '\0' && lastOr == '\0')
     {
       cmdExecutable* tmp = new cmdExecutable(command1);
       return tmp;
