@@ -21,8 +21,8 @@ cmdExecutable::cmdExecutable(char* command)
   args[i] = NULL;
 }
 
-cmdExecutable::~cmdExecutable()
-{}
+//cmdExecutable::~cmdExecutable()
+//{}
 
 bool cmdExecutable::execute()
 {
@@ -39,6 +39,8 @@ bool cmdExecutable::execute()
     //char *const tmp[] = { , NULL};
 
     pid_t pid = fork( );
+    int status;
+
 
     // first arguement is the command
     // second argument is a pointer to an array of pointers to
@@ -51,11 +53,18 @@ bool cmdExecutable::execute()
     // to do - checking if the executable failed ( returns -1 )
 
     if ( pid == 0 )
+    {
         execvp( executable, args );
-
-    // may have to change to wait( )
-    waitpid( pid, NULL, 0 );
-
-
+    }
+    else if( pid < 0 )
+    {
+        cout << "Error: fork failed" << endl;
+    }
+    else
+    {    
+        // may have to change to wait( )
+        waitpid(pid, &status, 0);
+        //waitpid( pid, NULL, 0 );
+    }
   return true;
 }

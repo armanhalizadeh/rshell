@@ -13,20 +13,20 @@ using namespace std;
 
 // prints the prompt for the user
 // displays the user name and host name
-void printPrompt(char* user)
+void printPrompt()
 {
-    //char *User;
+    char *User;
     char host[30];
 
-    //User = getlogin( );
+    User = getlogin( );
     gethostname( host, 30 );
 
-    cout << user << "@" << host << "$ ";
+    cout << User << "@" << host << "$ ";
 }
 
 
 //takes in user input and returns the char*
-char* getInput(char* user)
+char* getInput()
 {
   //takes in user input as string w/ getline
   string temp;
@@ -36,7 +36,7 @@ char* getInput(char* user)
   //print the prompt and wait for user input
   while ( temp.empty( ) )
   {
-      printPrompt(user);
+      printPrompt();
       getline( cin, temp );
   }
 
@@ -97,13 +97,12 @@ cmdBase* parse(char* input)
 
 int main()
 {
-  char* user = getlogin();
+  //char* user = getlogin();
   while(true)
   {
-    printPrompt(user);
-    char* userInput = getInput(user);
+    printPrompt();
+    char* userInput = getInput();
     cmdBase* head = parse(userInput);
     head->execute();
-    delete userInput;
   }
 }
