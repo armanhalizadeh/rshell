@@ -84,7 +84,7 @@ cmdBase* parse(char* input)
                 || command2[0] == ';')
         {
             cout  << "syntax error near unexpected token '"
-                                  << command2[0] << "'" << endl;
+                                  << ';'  << "'" << endl;
             cmdExecutable* tmp = new cmdExecutable( NULL );
             return tmp;
         }
