@@ -84,7 +84,7 @@ cmdBase* parse(char* input)
                 || command2[0] == ';')
         {
             cout  << "syntax error near unexpected token '"
-                                  << command2[0] << "'";
+                                  << command2[0] << "'" << endl;
             cmdExecutable* tmp = new cmdExecutable( NULL );
             return tmp;
         }
@@ -103,12 +103,12 @@ cmdBase* parse(char* input)
                     < strlen(lastOr)))
         {
             //checks if two connectors are in a row and prints error if so
-            if (lastAnd[-1] == '&' || lastAnd[-2] == '&' || 
+            if (lastAnd[-2] == '&' || lastAnd[-3] == '&' || 
                 lastAnd[-1] == '|' || lastAnd[-2] == '|' 
                 || lastAnd[-1] == ';' || lastAnd[-2] == ';')
             {
                 cout  << "syntax error near unexpected token '"
-                    << lastAnd[0] << "'";
+                    << lastAnd[0] << "'" << endl;
                 cmdExecutable* tmp = new cmdExecutable( NULL );
                 return tmp;
             }
@@ -132,11 +132,11 @@ cmdBase* parse(char* input)
         {
             //checks if two connectors are in a row and prints error if so
             if (lastOr[-1] == '&' || lastOr[-2] == '&' || 
-                lastOr[-1] == '|' || lastOr[-2] == '|' 
+                lastOr[-2] == '|' || lastOr[-3] == '|' 
                 || lastOr[-1] == ';' || lastOr[-2] == ';')
             {
                 cout  << "syntax error near unexpected token '"
-                    << lastOr[0] << "'";
+                    << lastOr[0] << "'" << endl;
                 cmdExecutable* tmp = new cmdExecutable( NULL );
                 return tmp;
             }
