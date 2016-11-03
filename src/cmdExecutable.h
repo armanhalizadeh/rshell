@@ -9,13 +9,13 @@ using namespace std;
 
 class cmdExecutable: public cmdBase
 {
-  private:
-    char* executable;
-    char* args[30];
-  public:
-    cmdExecutable(char*);
-    ~cmdExecutable() {};
-    bool execute();
+    private:
+        char* executable;
+        char* args[30];
+    public:
+        cmdExecutable(char*);
+        ~cmdExecutable() {};
+        bool execute();
 };
 
 #endif

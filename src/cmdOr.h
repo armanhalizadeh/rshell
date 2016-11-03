@@ -6,23 +6,23 @@
 
 class cmdOr: public cmdBase
 {
-  private:
-    cmdBase* left;
-    cmdBase* right;
-  public:
-    cmdOr(cmdBase* l, cmdBase* r): left(l), right(r) {};
-    bool execute()
-    {
-      if(left->execute())
-      {
-          return true;
-      }
-      else if(right->execute())
-      {
-          return true;
-      }
-      return false;
-    }
+    private:
+        cmdBase* left;
+        cmdBase* right;
+    public:
+        cmdOr(cmdBase* l, cmdBase* r): left(l), right(r) {};
+        bool execute()
+        {
+            if(left->execute())
+            {
+                return true;
+            }
+            else if(right->execute())
+            {
+                return true;
+            }
+            return false;
+        }
 };
 
 #endif

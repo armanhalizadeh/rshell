@@ -6,31 +6,31 @@
 
 class cmdAnd: public cmdBase
 {
-  private:
-    cmdBase* left;
-    cmdBase* right;
-  public:
-    cmdAnd(cmdBase* l, cmdBase* r): left(l), right(r) {};
-    ~cmdAnd()
-    {
-        delete left;
-        delete right;
-    }
-    bool execute()
-    {
-      if (!left->execute())
-      {
-          return false;
-      }
-      else if (!right->execute())
-      {
-          return false;
-      }
-      else
-      {
-          return true;
-      }
-    }
+    private:
+        cmdBase* left;
+        cmdBase* right;
+    public:
+        cmdAnd(cmdBase* l, cmdBase* r): left(l), right(r) {};
+        ~cmdAnd()
+        {
+            delete left;
+            delete right;
+        }
+        bool execute()
+        {
+            if (!left->execute())
+            {
+                return false;
+            }
+            else if (!right->execute())
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 };
 
 #endif

@@ -6,17 +6,17 @@
 
 class cmdSemi: public cmdBase
 {
-  private:
-    cmdBase* left;
-    cmdBase* right;
-  public:
-    cmdSemi(cmdBase* l, cmdBase* r): left(l), right(r) {};
-    bool execute()
-    {
-      left->execute();
-      right->execute();
-      return true;
-    }
+    private:
+        cmdBase* left;
+        cmdBase* right;
+    public:
+        cmdSemi(cmdBase* l, cmdBase* r): left(l), right(r) {};
+        bool execute()
+        {
+            left->execute();
+            right->execute();
+            return true;
+        }
 };
 
 #endif

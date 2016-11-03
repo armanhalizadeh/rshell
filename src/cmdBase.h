@@ -3,10 +3,10 @@
 
 class cmdBase
 {
-  public:
-    cmdBase() {};
-    virtual ~cmdBase() {};
-    virtual bool execute() = 0;
+    public:
+        cmdBase() {};
+        virtual ~cmdBase() {};
+        virtual bool execute() = 0;
 };
 
 #endif

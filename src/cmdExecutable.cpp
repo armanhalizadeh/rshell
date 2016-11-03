@@ -11,6 +11,7 @@ using namespace std;
 
 cmdExecutable::cmdExecutable(char* command)
 {
+
   executable = strtok(command, " ");
   command = strtok(NULL, " ");
   args[0] = executable;
@@ -51,6 +52,8 @@ bool cmdExecutable::execute()
     // will print echo
     //
     // to do - checking if the executable failed ( returns -1 )
+
+    cout << "Executable: " << executable << endl;
 
     if ( pid == 0 )
     {
