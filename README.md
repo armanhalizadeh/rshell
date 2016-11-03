@@ -47,10 +47,13 @@ to input `ctrl+c`.
 
 
 Another bug is spaces of more than between connectors
+
     ls &&   ||
+
 will result in a segmentation fault
 
 One input possibility we overlooked is the following
+
     ls ||
     ls &&
 
