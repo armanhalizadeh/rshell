@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./bin/rshell<<EOF
+./../bin/rshell<<EOF
 ./singleCommands.sh
 ./multiCommands.sh
 ./commentCommands.sh

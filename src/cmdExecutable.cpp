@@ -9,20 +9,29 @@
 
 using namespace std;
 
+// Placing the tokens to char*
 cmdExecutable::cmdExecutable(char* command)
 {
 
-  executable = strtok(command, " ");
-  command = strtok(NULL, " ");
-  args[0] = executable;
-  int i = 1;
-  while (command != NULL)
-  {
-    args[i] = command;
+    executable = strtok(command, " ");
     command = strtok(NULL, " ");
-    i++;
-  }
-  args[i] = NULL;
+
+    args[0] = executable;
+
+    int i = 1;
+
+    while (command != NULL)
+    {
+        args[i] = command;
+
+        command = strtok(NULL, " ");
+
+        i++;
+    }
+
+    //putting NULL at the end of args
+    //necessary for execvp
+    args[i] = NULL;
 }
 
 //cmdExecutable::~cmdExecutable()
@@ -30,36 +39,51 @@ cmdExecutable::cmdExecutable(char* command)
 
 bool cmdExecutable::execute()
 {
-    if (strcmp(executable, "exit") == 0)
+
+    // if the current command is exit
+    // the following with exit the rshell
+
+    // responsible for preventing the seg fault
+    // that occurs when || follows right after ;
+    // when it occurs, within main, the executable 
+    // becomes null
+    if ( executable == NULL )
+    {
+        return true;
+    }
+
+    // responsible for exiting the rshell
+    // whenever the input is exit or exit is 
+    // called through the connectors
+    else if (strcmp(executable, "exit") == 0)
     {
         exit(0);
     }
-    
-    // to remove - jonathan
-    // Hard coded example
-    // need to find a way to get argv to be of char * const
-    //char *const tmp[] = { , NULL};
 
+    // forks the process. Allows the executable
+    // to take process while the "rshell" waits 
+    // for the fork process
     pid_t pid = fork( );
+
     int status;
 
     // first arguement is the command
     // second argument is a pointer to an array of pointers to
     // null terminated null-terminated characters
-    // An example: echo testing
-    // executable - echo
-    // tmp - testing
-    // will print echo
-    //
-    // to do - checking if the executable failed ( returns -1 )
+
+    //cout << "Executable: " << executable << endl;
 
     if ( pid == 0 )
     {
         execvp( executable, args );
+
         //if command does not successfully run
         string execvpFail = string(executable);
+
         execvpFail += " failed";
+
         perror( execvpFail.c_str() );
+
         exit(EXIT_FAILURE);
     }
 
@@ -69,17 +93,18 @@ bool cmdExecutable::execute()
     }
 
     else
-    {    
-        // may have to change to wait( )
+    {
+        // waits for the process to end
         waitpid(pid, &status, 0);
-        //while( wait( &status ) != pid ) ;
     }
-    if (status != 0)
+
+    if (status != 0 )
     {
         return false;
     }
+
     else
     {
         return true;
     }
- }
+}
