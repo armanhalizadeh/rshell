@@ -43,8 +43,6 @@ bool cmdExecutable::execute()
     // if the current command is exit
     // the following with exit the rshell
 
-    cout << "inside execute" << endl;
-
     // responsible for preventing the seg fault
     // that occurs when || follows right after ;
     // when it occurs, within main, the executable 

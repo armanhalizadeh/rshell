@@ -46,9 +46,9 @@ char* getInput()
                 << temp[0];
 
             if ( temp[0] != ';' )
-                cout << " " << temp[1] << endl;
+                cout << " " << temp[1] << "'" << endl;
             else
-                cout << endl;
+                cout << "'" << endl;
 
         }
 
@@ -75,27 +75,19 @@ cmdBase* parse(char* input)
 
     command1 = strtok(command1, ";"); //finds first semicolon
 
-    cout << command1 << " OoooOOoo " << endl;
-
-
-    if ( strcmp( command1, "||" ) == 0 )
-    {
-        cout << "BAD" << endl;
-        command1[0] = ' ';
-        command1[1] = ' ';
-
-        cout << command1 << endl;
-        cout << "syntax error near unexpected token " << endl;
-
-        cmdExecutable* tmp = new cmdExecutable( NULL );
-
-        return tmp;
-    }
-
     char* command2 = strtok(NULL, "\0");
 
     if (command2 != NULL) //if semicolon was found
     {
+        if (command2[0] == '&' || command2[1] == '&' || 
+                command2[0] == '|' || command2[1] == '|' 
+                || command2[0] == ';')
+        {
+            cout  << "syntax error near unexpected token '"
+                                  << command2[0] << "'";
+            cmdExecutable* tmp = new cmdExecutable( NULL );
+            return tmp;
+        }
         //create semi connector by parsing left side and right side
         cmdSemi* tmp = new cmdSemi(parse(command1), parse(command2));
         return tmp;
@@ -110,10 +102,24 @@ cmdBase* parse(char* input)
         if (lastAnd != '\0' && (lastOr == '\0' || strlen(lastAnd) 
                     < strlen(lastOr)))
         {
+            //checks if two connectors are in a row and prints error if so
+            if (lastAnd[-1] == '&' || lastAnd[-2] == '&' || 
+                lastAnd[-1] == '|' || lastAnd[-2] == '|' 
+                || lastAnd[-1] == ';' || lastAnd[-2] == ';')
+            {
+                cout  << "syntax error near unexpected token '"
+                    << lastAnd[0] << "'";
+                cmdExecutable* tmp = new cmdExecutable( NULL );
+                return tmp;
+            }
+        
+
             lastAnd[-1] = '\0'; //make last && into NULL
             lastAnd[0] = '\0';
 
             command2 = &lastAnd[1]; //set right side to after last &
+            
+               
 
             cmdAnd* tmp = new cmdAnd(parse(command1), parse(command2));
 
@@ -124,6 +130,18 @@ cmdBase* parse(char* input)
         else if (lastOr != '\0' && (lastAnd == '\0' 
                     || strlen(lastOr) < strlen(lastAnd)))
         {
+            //checks if two connectors are in a row and prints error if so
+            if (lastOr[-1] == '&' || lastOr[-2] == '&' || 
+                lastOr[-1] == '|' || lastOr[-2] == '|' 
+                || lastOr[-1] == ';' || lastOr[-2] == ';')
+            {
+                cout  << "syntax error near unexpected token '"
+                    << lastOr[0] << "'";
+                cmdExecutable* tmp = new cmdExecutable( NULL );
+                return tmp;
+            }
+ 
+            
             lastOr[-1] = '\0'; //make last || into NULL
             lastOr[0] = '\0';
 
