@@ -44,3 +44,17 @@ the **rshell** enters into a input mode in which the prompt becomes
 In the actual standard bash the same result occurs. We are unsure if this is 
 the intended result of the command. In order to escape this mode the user needs
 to input `ctrl+c`.
+
+
+Another bug is spaces of more than between connectors
+    ls &&   ||
+will result in a segmentation fault
+
+One input possibility we overlooked is the following
+    ls ||
+    ls &&
+
+in which the is now executable to follow after the connector
+as a result there is a segmentation fault.
+
+The expected output for `ls &&` however in the actual shell enters into an input mode
