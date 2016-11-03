@@ -53,8 +53,6 @@ bool cmdExecutable::execute()
     //
     // to do - checking if the executable failed ( returns -1 )
 
-    cout << "Executable: " << executable << endl;
-
     if ( pid == 0 )
     {
         execvp( executable, args );
