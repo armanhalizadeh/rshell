@@ -29,3 +29,18 @@ the executable to the right of the connector will also execute regardless if it 
 or not. For the `||` connector the executable to the right of it will only execute if the exectuable
 before the connector fails. Lastly the `;` connector acts as a breakpoint. Any of the executables 
 will run regardless of its status.
+
+
+## Bugs
+
+In the following input
+    ls && #pwd
+or
+    ls || #pwd
+
+the **rshell** enters into a input mode in which the prompt becomes
+    >
+
+In the actual standard bash the same result occurs. We are unsure if this is 
+the intended result of the command. In order to escape this mode the user needs
+to input `ctrl+c`.
