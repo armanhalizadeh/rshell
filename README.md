@@ -33,12 +33,20 @@ will run regardless of its status.
 
 ## Bugs
 
-In the following input
+In the following:
+
+    echo "#sup"
+
+the output should be `#sup` ( in the normal shell ), but instead it displays `'`. The reason for this, is that the rshell
+ignores everything after the `#` comment symbol, so only the first qoutation mark outputs on the screen
+
+
+In the following input:
+
     ls && #pwd
-or
     ls || #pwd
 
-the **rshell** enters into a input mode in which the prompt becomes
+the **rshell** enters into a input mode in which the prompt becomes:
     >
 
 In the actual standard bash the same result occurs. We are unsure if this is 
@@ -61,3 +69,5 @@ in which the is now executable to follow after the connector
 as a result there is a segmentation fault.
 
 The expected output for `ls &&` however in the actual shell enters into an input mode
+The same follows with `ls ||`. This may be related to the second bug mentioned earlier.
+Our simple shell is limited to `/bin/` which possibly prevents us from entering that `>` mode.
