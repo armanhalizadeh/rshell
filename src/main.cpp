@@ -46,13 +46,28 @@ char* getInput()
                 << temp[0];
 
             if ( temp[0] != ';' )
-                cout << " " << temp[1] << "'" << endl;
+                cout << temp[1] << "'" << endl;
             else
                 cout << "'" << endl;
 
         }
 
         printPrompt();
+        getline( cin, temp );
+    }
+
+    if ( temp.find("&& ||") != std::string::npos )
+    {
+        cout << "syntax error near unexpected token ||" << endl;
+
+        printPrompt( );
+        getline( cin, temp );
+    }
+
+    else if ( temp.find( "|| &&" ) != std::string::npos )
+    {
+        cout << "syntax error near unexpected token &&" << endl;
+        printPrompt( );
         getline( cin, temp );
     }
 
