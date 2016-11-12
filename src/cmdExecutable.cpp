@@ -39,7 +39,6 @@ cmdExecutable::cmdExecutable(char* command)
 
 bool cmdExecutable::execute()
 {
-
     // if the current command is exit
     // the following with exit the rshell
 
@@ -47,6 +46,9 @@ bool cmdExecutable::execute()
     // that occurs when || follows right after ;
     // when it occurs, within main, the executable 
     // becomes null
+    //
+    // Maybe this check wont be needed anymore
+    // need to further test out
     if ( executable == NULL )
     {
         return true;

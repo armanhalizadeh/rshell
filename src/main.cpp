@@ -33,44 +33,13 @@ char* getInput()
 
     getline(cin, temp);
 
+    if ( temp.size( ) == 0 )
+        return NULL;
+
     //if user entered nothing
     //print the prompt and wait for user input
     //checks for syntax error when the connectors
     //are the first inputs 
-    while ( temp.empty( ) || temp[0] == '&' ||
-            temp[0] == '|' || temp[0] == ';')
-    {
-        if (temp[0] == '&' || temp[0] == '|' || temp[0] == ';')
-        {
-            cout << "syntax error near unexpected token '"
-                << temp[0];
-
-            if ( temp[0] != ';' )
-                cout << temp[1] << "'" << endl;
-            else
-                cout << "'" << endl;
-
-        }
-
-        printPrompt();
-        getline( cin, temp );
-    }
-
-    if ( temp.find("&& ||") != std::string::npos )
-    {
-        cout << "syntax error near unexpected token ||" << endl;
-
-        printPrompt( );
-        getline( cin, temp );
-    }
-
-    else if ( temp.find( "|| &&" ) != std::string::npos )
-    {
-        cout << "syntax error near unexpected token &&" << endl;
-        printPrompt( );
-        getline( cin, temp );
-    }
-
     //creates char array and sets it equal to string
     char* input = new char[temp.size()];
 
@@ -79,34 +48,32 @@ char* getInput()
         input[i] = temp.at(i);
     }
 
+    
     input[temp.size()] = '\0'; //adds NULL to end of char array
+
     return input;
 }
 
 //creates tree of command connectors by parsing the entered line
 cmdBase* parse(char* input)
 {
-    char* command1 = strtok(input, "#"); //removes everything thats a comment
 
+    if ( input[0] == '\0' || input[0] == ';' )
+        return NULL; 
+
+    char* command1 = strtok(input, "#"); //removes everything thats a comment
+    
     command1 = strtok(command1, ";"); //finds first semicolon
 
     char* command2 = strtok(NULL, "\0");
 
     if (command2 != NULL) //if semicolon was found
     {
-        if (command2[0] == '&' || command2[1] == '&' || 
-                command2[0] == '|' || command2[1] == '|' 
-                || command2[0] == ';')
-        {
-            cout  << "syntax error near unexpected token '"
-                                  << ';'  << "'" << endl;
-            cmdExecutable* tmp = new cmdExecutable( NULL );
-            return tmp;
-        }
         //create semi connector by parsing left side and right side
         cmdSemi* tmp = new cmdSemi(parse(command1), parse(command2));
         return tmp;
     }
+
     else //no semicolon found
     {
         //tree must be built with last connector having highest priority
@@ -117,25 +84,13 @@ cmdBase* parse(char* input)
         if (lastAnd != '\0' && (lastOr == '\0' || strlen(lastAnd) 
                     < strlen(lastOr)))
         {
-            //checks if two connectors are in a row and prints error if so
-            if (lastAnd[-2] == '&' || lastAnd[-3] == '&' || 
-                lastAnd[-1] == '|' || lastAnd[-2] == '|' 
-                || lastAnd[-1] == ';' || lastAnd[-2] == ';')
-            {
-                cout  << "syntax error near unexpected token '"
-                    << lastAnd[0] << "'" << endl;
-                cmdExecutable* tmp = new cmdExecutable( NULL );
-                return tmp;
-            }
         
-
             lastAnd[-1] = '\0'; //make last && into NULL
             lastAnd[0] = '\0';
 
             command2 = &lastAnd[1]; //set right side to after last &
             
                
-
             cmdAnd* tmp = new cmdAnd(parse(command1), parse(command2));
 
             return tmp;
@@ -146,17 +101,7 @@ cmdBase* parse(char* input)
                     || strlen(lastOr) < strlen(lastAnd)))
         {
             //checks if two connectors are in a row and prints error if so
-            if (lastOr[-1] == '&' || lastOr[-2] == '&' || 
-                lastOr[-2] == '|' || lastOr[-3] == '|' 
-                || lastOr[-1] == ';' || lastOr[-2] == ';')
-            {
-                cout  << "syntax error near unexpected token '"
-                    << lastOr[0] << "'" << endl;
-                cmdExecutable* tmp = new cmdExecutable( NULL );
-                return tmp;
-            }
  
-            
             lastOr[-1] = '\0'; //make last || into NULL
             lastOr[0] = '\0';
 
@@ -180,13 +125,20 @@ int main()
 {
     while(true)
     {
-        printPrompt();
 
-        char* userInput = getInput();
+        printPrompt( ); 
+        char* userInput = getInput( );
+ 
+        if ( userInput != NULL )
+        {
+            cmdBase* head = parse(userInput);
 
-        cmdBase* head = parse(userInput);
+            if ( head != NULL )
+                head->execute( );
 
-        head->execute( );
-        delete head;
+            delete userInput;
+            delete head;
+
+        }
     }
 }
