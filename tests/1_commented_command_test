@@ -8,3 +8,4 @@ echo B #ls
 ls #-r
 pwd #cal
 cal #pwd
+exit
