@@ -8,8 +8,32 @@
 #include "cmdBase.h"
 #include "cmdSemi.h"
 #include "cmdExecutable.h"
+#include <vector>
+#include <stack>
+#include <list>
+#include <iterator>
 
 using namespace std;
+
+void printPrompt();
+char* getInput();
+cmdBase* parse(char* input);
+vector<char*> infixToPostfix(vector<char*> vInfix);
+
+int main()
+{
+    while(true)
+    {
+        printPrompt();
+
+        char* userInput = getInput();
+
+        cmdBase* head = parse(userInput);
+
+        //head->execute( );
+        //delete head;
+    }
+}
 
 // prints the prompt for the user
 // displays the user name and host name
@@ -86,107 +110,125 @@ char* getInput()
 //creates tree of command connectors by parsing the entered line
 cmdBase* parse(char* input)
 {
-    char* command1 = strtok(input, "#"); //removes everything thats a comment
+    list<char*> vInfix;
+    char* cmdPtr;
 
-    command1 = strtok(command1, ";"); //finds first semicolon
-
-    char* command2 = strtok(NULL, "\0");
-
-    if (command2 != NULL) //if semicolon was found
+    cmdPtr = strtok(input, ";");
+    while (cmdPtr != NULL)
     {
-        if (command2[0] == '&' || command2[1] == '&' || 
-                command2[0] == '|' || command2[1] == '|' 
-                || command2[0] == ';')
-        {
-            cout  << "syntax error near unexpected token '"
-                                  << ';'  << "'" << endl;
-            cmdExecutable* tmp = new cmdExecutable( NULL );
-            return tmp;
-        }
-        //create semi connector by parsing left side and right side
-        cmdSemi* tmp = new cmdSemi(parse(command1), parse(command2));
-        return tmp;
+        vInfix.push_back(cmdPtr);
+        char* temp = new char[1];
+        *temp = ';';
+        vInfix.push_back(temp);
+        cmdPtr = strtok(NULL, ";");
     }
-    else //no semicolon found
+    if (*vInfix.back() == ';')
     {
-        //tree must be built with last connector having highest priority
-        char* lastAnd = strrchr(command1, '&'); //returns ptr to last &
-        char* lastOr = strrchr(command1, '|'); //returns ptr to last |
-
-        //if there is && but no || or if && is after ||
-        if (lastAnd != '\0' && (lastOr == '\0' || strlen(lastAnd) 
-                    < strlen(lastOr)))
+        vInfix.pop_back();
+    }
+    
+    for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
+    {
+        cmdPtr = strtok(*it, "&");
+        char* cmdPtr2 = strtok(NULL, "&");
+        while (cmdPtr2 != NULL)
         {
-            //checks if two connectors are in a row and prints error if so
-            if (lastAnd[-2] == '&' || lastAnd[-3] == '&' || 
-                lastAnd[-1] == '|' || lastAnd[-2] == '|' 
-                || lastAnd[-1] == ';' || lastAnd[-2] == ';')
-            {
-                cout  << "syntax error near unexpected token '"
-                    << lastAnd[0] << "'" << endl;
-                cmdExecutable* tmp = new cmdExecutable( NULL );
-                return tmp;
-            }
-        
-
-            lastAnd[-1] = '\0'; //make last && into NULL
-            lastAnd[0] = '\0';
-
-            command2 = &lastAnd[1]; //set right side to after last &
-            
-               
-
-            cmdAnd* tmp = new cmdAnd(parse(command1), parse(command2));
-
-            return tmp;
+           *it = cmdPtr;
+           char* temp = new char[2];
+           temp[0] = '&';
+           temp[1] = '&';
+           it++;
+           if(it == vInfix.end())
+           {
+               it--;
+               vInfix.push_back(temp);
+               vInfix.push_back(cmdPtr2);
+               it++;
+           }
+           else
+           {
+               vInfix.insert(it++, temp);
+               vInfix.insert(it, cmdPtr2);
+           }
+           cmdPtr = strtok(cmdPtr2, "&");
+           cmdPtr2 = strtok(NULL, "&");
         }
-
-        //if there is || but no && or if || is after &&
-        else if (lastOr != '\0' && (lastAnd == '\0' 
-                    || strlen(lastOr) < strlen(lastAnd)))
+    }
+    
+    for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
+    {
+        cmdPtr = strtok(*it, "|");
+        char* cmdPtr2 = strtok(NULL, "|");
+        while (cmdPtr2 != NULL)
         {
-            //checks if two connectors are in a row and prints error if so
-            if (lastOr[-1] == '&' || lastOr[-2] == '&' || 
-                lastOr[-2] == '|' || lastOr[-3] == '|' 
-                || lastOr[-1] == ';' || lastOr[-2] == ';')
-            {
-                cout  << "syntax error near unexpected token '"
-                    << lastOr[0] << "'" << endl;
-                cmdExecutable* tmp = new cmdExecutable( NULL );
-                return tmp;
-            }
+           *it = cmdPtr;
+           char* temp = new char[2];
+           temp[0] = '|';
+           temp[1] = '|';
+           vInfix.insert(it++, temp);
+           vInfix.insert(it++, cmdPtr2);
+           cmdPtr = strtok(cmdPtr2, "&");
+           cmdPtr2 = strtok(NULL, "&");
+        }
  
-            
-            lastOr[-1] = '\0'; //make last || into NULL
-            lastOr[0] = '\0';
-
-            command2 = &lastOr[1]; //set right side to after last |
-
-            cmdOr* tmp = new cmdOr(parse(command1), parse(command2));
-
-            return tmp;
-        }
-
-        //if no && or || commands found
-        else //if (lastAnd == '\0' && lastOr == '\0')
-        {
-            cmdExecutable* tmp = new cmdExecutable(command1);
-            return tmp;
-        }
     }
-}
 
-int main()
-{
-    while(true)
+    for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
     {
-        printPrompt();
+        cout << *it << endl;
+    }
 
-        char* userInput = getInput();
+    /*fills v with every word
+    wordPointer = strtok(input, " ");
+    while(wordPointer != '\0')
+    {
+        vInfix.push_back(wordPointer);
+        wordPointer = strtok(NULL, " ");
+    }
+    if (vInfix.back() == ";")
+    {
+        vInfix.pop_back();
+    }*/
 
-        cmdBase* head = parse(userInput);
+    //vector<char*> vPostfix = infixToPostfix(vInfix);
 
-        head->execute( );
-        delete head;
+    cmdExecutable* t = new cmdExecutable(NULL);
+    return t;
+}
+
+vector<char*> infixToPostfix(vector<char*> vInfix)
+{
+    stack<char*> cntrStack;
+    vector<char*> vPostfix;
+    char* wrdPtr;
+    for (int i = 0, n = vInfix.size(); i < n; i++)
+    {
+        //TODO: FINISH PARSE
+        wrdPtr = vInfix.at(i); 
+        if (wrdPtr == "&&" || wrdPtr == "||" || wrdPtr == ";") {
+            if (wrdPtr == "(")
+            {
+
+            }
+            else if (wrdPtr == ";")
+            {
+                while (!cntrStack.empty())
+                {
+                    vPostfix.push_back(cntrStack.top());
+                    cntrStack.pop();
+                }
+            }
+            else
+            {
+                while (!cntrStack.empty())
+                {
+                    vPostfix.push_back(cntrStack.top());
+                    cntrStack.pop();
+                }
+
+            }
+        }
     }
 }
+
+
