@@ -110,3 +110,60 @@ bool cmdExecutable::execute()
         return true;
     }
 }
+
+// The following is how test command will work
+
+/*
+int main( )
+{
+    struct stat sb;
+    
+    string fileName = "test.txt";
+    string dirName = "test";
+
+    bool exist = false;
+    bool exist2 = false;
+
+    // checks if the file/directory exist
+    // the string for a directory does not have to contain
+    // an '/' at the end of it.
+    // However, including it works perfectly fine to
+
+    exist = ( stat( fileName.c_str( ), &sb ) == 0 );
+
+    if ( exist )
+        cout << "(True)" << endl;
+
+    else
+        cout << "(False)" << endl;
+
+   
+    // stat checks if something exist
+    // when checking if its a regular file or a directory
+    // there has to be a secondary check
+
+    // -e checks if the file/directory exist ( line 21 )
+    //
+    // -f checks if the file/directory exist and is a regular file
+    // -d checks if the file/directory exist and is a directory
+    
+    exist = ( stat( dirName.c_str( ), &sb ) == 0 );
+
+    if ( exist )
+    {
+        exist2 = S_ISDIR( sb.st_mode );
+        
+        if ( exist2 )
+            cout << "(True)" << endl;
+
+        else
+            cout << "(False)" << endl;
+    }
+
+    // S_ISREG - checking if its a regular file
+    // S_ISDIR - checking if its a directory
+
+    return 0;
+}
+
+*/
