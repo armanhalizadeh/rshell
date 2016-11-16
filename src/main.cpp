@@ -28,10 +28,16 @@ int main()
 
         char* userInput = getInput();
 
-        cmdBase* head = parse(userInput);
+        if ( userInput != NULL )
+        {
+            cmdBase* head = parse(userInput);
 
-        //head->execute( );
-        //delete head;
+            //if ( head != NULL )
+            //    head->execute( );
+
+            delete userInput;
+            delete head;
+        }
     }
 }
 
@@ -57,43 +63,8 @@ char* getInput()
 
     getline(cin, temp);
 
-    //if user entered nothing
-    //print the prompt and wait for user input
-    //checks for syntax error when the connectors
-    //are the first inputs 
-    while ( temp.empty( ) || temp[0] == '&' ||
-            temp[0] == '|' || temp[0] == ';')
-    {
-        if (temp[0] == '&' || temp[0] == '|' || temp[0] == ';')
-        {
-            cout << "syntax error near unexpected token '"
-                << temp[0];
-
-            if ( temp[0] != ';' )
-                cout << temp[1] << "'" << endl;
-            else
-                cout << "'" << endl;
-
-        }
-
-        printPrompt();
-        getline( cin, temp );
-    }
-
-    if ( temp.find("&& ||") != std::string::npos )
-    {
-        cout << "syntax error near unexpected token ||" << endl;
-
-        printPrompt( );
-        getline( cin, temp );
-    }
-
-    else if ( temp.find( "|| &&" ) != std::string::npos )
-    {
-        cout << "syntax error near unexpected token &&" << endl;
-        printPrompt( );
-        getline( cin, temp );
-    }
+    if ( temp.size( ) == 0 )
+        return NULL;
 
     //creates char array and sets it equal to string
     char* input = new char[temp.size()];
@@ -110,6 +81,9 @@ char* getInput()
 //creates tree of command connectors by parsing the entered line
 cmdBase* parse(char* input)
 {
+    if ( input[0] == '\0' || input[0] == ';' )
+        return NULL;
+
     list<char*> vInfix;
     char* cmdPtr;
 
@@ -205,12 +179,20 @@ vector<char*> infixToPostfix(vector<char*> vInfix)
     {
         //TODO: FINISH PARSE
         wrdPtr = vInfix.at(i); 
-        if (wrdPtr == "&&" || wrdPtr == "||" || wrdPtr == ";") {
-            if (wrdPtr == "(")
+        if ( ( strcmp( wrdPtr, "&&" ) == 0 ) || ( strcmp( wrdPtr, "||") == 0) 
+                || ( strcmp( wrdPtr, ";") == 0 ) )
+        {
+            if ( strcmp( wrdPtr, "(") == 0 )
             {
+                while ( !cntrStack.empty( ) )
+                {
+                    vPostfix.push_back(cntrStack.top());
+                    cntrStack.pop( );
+                }
 
             }
-            else if (wrdPtr == ";")
+
+            else if ( strcmp( wrdPtr,";" ) == 0 )
             {
                 while (!cntrStack.empty())
                 {
@@ -218,6 +200,7 @@ vector<char*> infixToPostfix(vector<char*> vInfix)
                     cntrStack.pop();
                 }
             }
+
             else
             {
                 while (!cntrStack.empty())
@@ -225,10 +208,12 @@ vector<char*> infixToPostfix(vector<char*> vInfix)
                     vPostfix.push_back(cntrStack.top());
                     cntrStack.pop();
                 }
-
             }
         }
     }
+
+    return vPostfix;
 }
+    
 
 
