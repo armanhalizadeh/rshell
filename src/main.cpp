@@ -67,7 +67,7 @@ char* getInput()
         return NULL;
 
     //creates char array and sets it equal to string
-    char* input = new char[temp.size()];
+    char* input = new char[temp.size() + 1];
 
     for (int i = 0, n = temp.size(); i < n; i++)
     {

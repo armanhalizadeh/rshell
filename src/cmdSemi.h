@@ -11,6 +11,11 @@ class cmdSemi: public cmdBase
         cmdBase* right;
     public:
         cmdSemi(cmdBase* l, cmdBase* r): left(l), right(r) {};
+        ~cmdSemi() 
+        {
+            delete left;
+            delete right;
+        }
         bool execute()
         {
             left->execute();
