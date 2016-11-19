@@ -59,7 +59,12 @@ bool cmdExecutable::execute()
     if ( strcmp( executable, "test" ) == 0 || strcmp( executable, "[" ) == 0)
     {
         //cout << "input is test" << endl;
-
+        
+        if (args[2] == '\0' || strcmp(args[2], "]") != 0)
+        {
+            cout << "Error: missing ']'" << endl;
+            return false;
+        }
         struct stat sb;
 
         int pathLocation = 1;
