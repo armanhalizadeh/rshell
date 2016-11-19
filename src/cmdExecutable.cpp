@@ -46,10 +46,17 @@ cmdExecutable::~cmdExecutable()
 
 bool cmdExecutable::execute()
 {
+    // responsible for preventing the seg fault
+    // that occurs when || follows right after ;
+    // when it occurs, within main, the executable 
+    // becomes null
+    if ( executable == NULL )
+    {
+        return true;
+    }
+ 
 
-    cout << executable << endl;
-
-    if ( strcmp( executable, "test" ) == 0 )
+    if ( strcmp( executable, "test" ) == 0 || strcmp( executable, "[" ) == 0)
     {
         //cout << "input is test" << endl;
 
@@ -118,15 +125,7 @@ bool cmdExecutable::execute()
     // if the current command is exit
     // the following with exit the rshell
 
-    // responsible for preventing the seg fault
-    // that occurs when || follows right after ;
-    // when it occurs, within main, the executable 
-    // becomes null
-    if ( executable == NULL )
-    {
-        return true;
-    }
-
+    
     // responsible for exiting the rshell
     // whenever the input is exit or exit is 
     // called through the connectors
