@@ -13,8 +13,16 @@ class cmdSemi: public cmdBase
         cmdSemi(cmdBase* l, cmdBase* r): left(l), right(r) {};
         bool execute()
         {
+            if ( left == NULL )
+                return false;
+
             left->execute();
+
+            if ( right == NULL )
+                return false;
+
             right->execute();
+
             return true;
         }
 };

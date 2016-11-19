@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
@@ -40,6 +41,74 @@ cmdExecutable::cmdExecutable(char* command)
 bool cmdExecutable::execute()
 {
 
+    cout << executable << endl;
+
+    if ( strcmp( executable, "test" ) == 0 )
+    {
+        //cout << "input is test" << endl;
+
+        struct stat sb;
+
+        int pathLocation = 1;
+        bool exist = false;
+        bool exist2 = false;
+
+        string temp;
+
+        temp.append( args[1] );
+
+        if ( temp[0] != '-'  || temp[1] == 'e' )
+        {
+            if ( temp[1] == 'e' )
+                pathLocation = 2;
+
+
+            exist = ( stat( args[pathLocation], &sb ) == 0 );
+
+            if ( exist )
+                cout << "(True)" << endl;
+
+            else
+                cout << "(False)" << endl;
+        }
+
+        else
+        {
+
+            exist = ( stat( args[2], &sb ) == 0 );
+
+            if ( temp[1] == 'f' )
+            {
+                if ( exist )
+                {
+                    exist2 = S_ISREG( sb.st_mode );
+
+                    if ( exist2 )
+                        cout << "(True)" << endl;
+
+                    else
+                        cout << "(False)" << endl;
+                }
+            }
+
+            else if ( temp[1] == 'd' )
+            {
+                if ( exist )
+                {
+                    exist2 = S_ISDIR( sb.st_mode );
+
+                    if ( exist2 )
+                        cout << "(True)" << endl;
+
+                    else
+                        cout << "(False)" << endl;
+                  
+                }
+
+            }
+        }
+
+    }
     // if the current command is exit
     // the following with exit the rshell
 
