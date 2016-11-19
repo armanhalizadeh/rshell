@@ -79,10 +79,16 @@ bool cmdExecutable::execute()
             exist = ( stat( args[pathLocation], &sb ) == 0 );
 
             if ( exist )
+            {
                 cout << "(True)" << endl;
+                return true;
+            }
 
             else
+            {
                 cout << "(False)" << endl;
+                return false;
+            }
         }
 
         else
@@ -97,10 +103,20 @@ bool cmdExecutable::execute()
                     exist2 = S_ISREG( sb.st_mode );
 
                     if ( exist2 )
+                    {
                         cout << "(True)" << endl;
-
+                        return true;
+                    }
                     else
+                    {
                         cout << "(False)" << endl;
+                        return false;
+                    }
+                }
+                else
+                {
+                    cout << "(False)" << endl;
+                    return false;
                 }
             }
 
@@ -111,11 +127,22 @@ bool cmdExecutable::execute()
                     exist2 = S_ISDIR( sb.st_mode );
 
                     if ( exist2 )
+                    {
                         cout << "(True)" << endl;
+                        return true;
+                    }
 
                     else
+                    {
                         cout << "(False)" << endl;
+                        return false;
+                    }
                   
+                }
+                else
+                {
+                    cout << "(False)" << endl;
+                    return false;
                 }
 
             }
