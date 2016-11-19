@@ -32,9 +32,11 @@ int main()
         if ( userInput != NULL )
         {
             cmdBase* head = parse(userInput);
-
-            head->execute( );
-
+            
+            if (head != NULL)
+            {
+                head->execute( );
+            }
             //delete userInput;
             //delete head;
         }
@@ -64,7 +66,21 @@ char* getInput()
     getline(cin, temp);
 
     if ( temp.size( ) == 0 )
+    {
         return NULL;
+    }
+
+    int i = 0;
+    while (temp.at(i) == ' ')
+    {
+        i++;
+    }
+    if (temp.at(i) == ';' || temp.at(i) == '|' || temp.at(i) == '&')
+    {
+        cout << "syntax error found near unexpected token '" 
+            << temp.at(i) << "'" << endl;
+        return NULL;
+    }
 
     //creates char array and sets it equal to string
     char* input = new char[temp.size() + 1];
@@ -223,7 +239,54 @@ cmdBase* parse(char* input)
         }
     }
 
-        vector<char*> vPostfix = infixToPostfix(vInfix);
+    int numOfLP = 0, numOfRP = 0, rptCmdCheck = 0;
+    for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
+    {
+        char* wrdPtr = *it;
+        int i = 0;
+        while (wrdPtr[i] == ' ')
+        {
+            i++;
+        }
+        if (wrdPtr[i] == '\0')
+        {
+            cout << "Error: empty command found" << endl;
+            return NULL;
+        }
+        if (strcmp(wrdPtr, "&&") == 0 || strcmp(wrdPtr, "||") == 0 
+            || strcmp(wrdPtr, ";") == 0)
+        {
+            if (rptCmdCheck == 1)
+            {
+                cout << "syntax error near unexpected token '" << wrdPtr << "'" << endl;;
+                return NULL;
+            }
+            else
+            {
+                rptCmdCheck++;
+            }
+        }
+        else if (strcmp(wrdPtr, "(") == 0)
+        {
+            numOfLP++;
+        }
+        else if (strcmp(wrdPtr, ")") == 0)
+        {
+            numOfRP++;
+        }
+        else 
+        {
+            rptCmdCheck = 0;
+        }
+    }
+    if (numOfRP != numOfLP)
+    {
+        cout << "Error: uneven number of parentheses" << endl;
+        return NULL;
+    }
+
+    vector<char*> vPostfix = infixToPostfix(vInfix);
+
     stack<cmdBase*> cmdStack;
     for (int i = 0, n = vPostfix.size(); i < n; i++)
     {
