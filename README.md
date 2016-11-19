@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains a c++ program that mimics a simple command shell called **rshell**. It is able to execute programs within `/bin/`.
+This repository contains a c++ program that mimics a simple command shell called **rshell**. It is able to execute programs within `/bin/`. Additonally, it is able to execute test commands. 
 The simple shell also uses connectors to string commands together.
 
 The avaliable connectors are the following: `&&`, `||`, and `;`.
@@ -31,6 +31,25 @@ before the connector fails. Lastly the `;` connector acts as a breakpoint. Any o
 will run regardless of its status.
 
 
+## New
+
+The following command `test` is a new addition to **rshell**. The command can be used to check
+if a file or directory exist. The command will output either `(True)` or `(False)` in regards to whether 
+it exist. The following are example formats to the `test` command.
+
+    test main.cpp
+    [ main.cpp ]
+    [ -d directory/ ]
+    test -e directory/file
+
+The `test` command has the following arguments: `-e`, `-d` and `-f`. The `-e` argument is used by defualt when
+there is no argument provided. The argument tells test to check wheter the file/directory exist. The `-d` argument
+tells test to check if the file/directory that user inputs is a directory. While `-f` checks if the specificed file/directory is a regular file.
+
+Notice the example, `[ main.cpp ]`, The brackets act as an alias to test. In order for the alias to work it has to have the opening bracket `[` and the closing bracket `]`.
+
+Another new feature is the use of `( )` in order to give a specified command(s) priority to its overall return truth value. The `( )` does not give priority in the sense of displaying its result, but rather it groups the overall return value of mutliple commands.
+
 ## Bugs
 
 In the following:
@@ -43,31 +62,8 @@ ignores everything after the `#` comment symbol, so only the first qoutation mar
 
 In the following input:
 
-    ls && #pwd
+    ls && #pw
     ls || #pwd
 
-the **rshell** enters into a input mode in which the prompt becomes:
-    >
-
-In the actual standard bash the same result occurs. We are unsure if this is 
-the intended result of the command. In order to escape this mode the user needs
-to input `ctrl+c`.
-
-
-Another bug is spaces of more than between connectors
-
-    ls &&   ||
-
-will result in a segmentation fault
-
-One input possibility we overlooked is the following
-
-    ls ||
-    ls &&
-
-in which the is now executable to follow after the connector
-as a result there is a segmentation fault.
-
-The expected output for `ls &&` however in the actual shell enters into an input mode
-The same follows with `ls ||`. This may be related to the second bug mentioned earlier.
-Our simple shell is limited to `/bin/` which possibly prevents us from entering that `>` mode.
+In the previous version of **rshell** the result of the input will go into an input mode.
+Now, we ignore that and just display the command.

@@ -14,7 +14,7 @@ class cmdExecutable: public cmdBase
         char* args[30];
     public:
         cmdExecutable(char*);
-        ~cmdExecutable() {};
+        ~cmdExecutable();
         bool execute();
 };
 

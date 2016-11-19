@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
@@ -34,15 +35,17 @@ cmdExecutable::cmdExecutable(char* command)
     args[i] = NULL;
 }
 
-//cmdExecutable::~cmdExecutable()
-//{}
+cmdExecutable::~cmdExecutable()
+{
+    int i = 0;
+    while (args[i] != 0)
+    {
+        delete args[i];
+    }
+}
 
 bool cmdExecutable::execute()
 {
-
-    // if the current command is exit
-    // the following with exit the rshell
-
     // responsible for preventing the seg fault
     // that occurs when || follows right after ;
     // when it occurs, within main, the executable 
@@ -51,7 +54,112 @@ bool cmdExecutable::execute()
     {
         return true;
     }
+ 
+    unsigned int lastPos = 0;
 
+    for ( ; args[lastPos] != '\0'; lastPos++ ){}
+    lastPos--;
+    
+
+    if ( strcmp( executable, "test" ) == 0 || strcmp( executable, "[" ) == 0)
+    {
+        int argNum = 0;
+        while (args[argNum] != NULL)
+        {
+            argNum++;
+        }
+        if ((executable[0] == '[' && argNum == 4) 
+                || (strcmp(executable, "test") == 0 && argNum == 3) )
+        {
+            if (strcmp(args[1], "-e") != 0 && strcmp(args[1], "-f") != 0 
+                    && strcmp(args[1], "-d") != 0)
+            {
+                cout << "Error: unexpected argument '" << args[1] << "'" << endl;
+                return false;
+            }
+        }
+        else if ((executable[0] == '[' && (argNum > 4 || argNum < 3)) 
+                || (strcmp(executable, "test") == 0 && (argNum < 2 || argNum > 3)) )
+        {
+            cout << "Error: unexpected number of arguments" << endl;
+            return false;
+        }
+
+        if ( executable[0] == '[' )
+        {
+            if ( strcmp( args[ lastPos], "]") != 0 )
+            {
+                cout << "Error: missing ']' " << endl;
+
+                return false;
+            }   
+        } 
+
+
+        struct stat sb;
+
+        int pathLocation = 1;
+        bool exist = false;
+        bool exist2 = false;
+
+        string temp;
+
+        temp.append( args[1] );
+
+        if ( temp[0] != '-'  || temp[1] == 'e' )
+        {
+            if ( temp[1] == 'e' )
+                pathLocation = 2;
+
+
+            exist = ( stat( args[pathLocation], &sb ) == 0 );
+
+            if ( exist )
+                cout << "(True)" << endl;
+
+            else
+                cout << "(False)" << endl;
+
+            return exist;
+        }
+
+        else
+        {
+
+            exist = ( stat( args[2], &sb ) == 0 );
+
+            if ( exist )
+            {
+               if ( temp[1] == 'f' )
+                   exist2 = S_ISREG( sb.st_mode );
+
+               else if ( temp[1] == 'd' )
+                   exist2 = S_ISDIR( sb.st_mode );
+
+               if ( exist2 )
+                   cout << "(True)" << endl;
+
+               else
+                   cout << "(False)" << endl;
+
+               return exist2;
+            }
+
+            else
+            {
+                cout << "(False)" << endl;
+
+                return exist;
+            }
+
+        }
+
+
+    }
+    // if the current command is exit
+    // the following with exit the rshell
+
+    
     // responsible for exiting the rshell
     // whenever the input is exit or exit is 
     // called through the connectors
