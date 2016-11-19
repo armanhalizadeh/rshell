@@ -60,7 +60,9 @@ bool cmdExecutable::execute()
     {
         //cout << "input is test" << endl;
         
-        if (args[2] == '\0' || strcmp(args[2], "]") != 0)
+        if (strcmp(args[0], "[") == 0 && (args[2] == NULL || (args[3] == NULL 
+             && strcmp(args[2], "]") != 0) 
+             || (args[3] != NULL && strcmp(args[3], "]") != 0)))
         {
             cout << "Error: missing ']'" << endl;
             return false;
