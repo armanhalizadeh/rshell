@@ -67,3 +67,16 @@ In the following input:
 
 In the previous version of **rshell** the result of the input will go into an input mode.
 Now, we ignore that and just display the command.
+
+(Not a bug )The use of `/` to indicate location of a file or directory has to be used correctly with the use of test.
+For example
+
+    test /dev
+
+works correctly and properly at any current working directory as long as file/directory is not in the c.w.d.. While in the other hand using 
+    
+    test /dir
+
+in which dir is inside the current working directory is improper use of `/`
+
+ 
