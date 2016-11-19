@@ -61,6 +61,10 @@ bool cmdExecutable::execute()
     lastPos--;
     
 
+    // checks if the first input is either test or the alias for test [
+    // if there is a [, it checks if there is a closing bracket 
+    // One way of achieving this is to check if the [ ] is overloaded with 
+    // arguments
     if ( strcmp( executable, "test" ) == 0 || strcmp( executable, "[" ) == 0)
     {
         int argNum = 0;
@@ -68,18 +72,22 @@ bool cmdExecutable::execute()
         {
             argNum++;
         }
+
         if ((executable[0] == '[' && argNum == 4) 
                 || (strcmp(executable, "test") == 0 && argNum == 3) )
         {
             if (strcmp(args[1], "-e") != 0 && strcmp(args[1], "-f") != 0 
                     && strcmp(args[1], "-d") != 0)
             {
-                cout << "Error: unexpected argument '" << args[1] << "'" << endl;
+                cout << "Error: unexpected argument '" << args[1] << "'" 
+                    << endl;
+
                 return false;
             }
         }
         else if ((executable[0] == '[' && (argNum > 4 || argNum < 3)) 
-                || (strcmp(executable, "test") == 0 && (argNum < 2 || argNum > 3)) )
+                || (strcmp(executable, "test") == 0 && (argNum < 2 || 
+                        argNum > 3)) )
         {
             cout << "Error: unexpected number of arguments" << endl;
             return false;
@@ -96,23 +104,24 @@ bool cmdExecutable::execute()
         } 
 
 
+       
         struct stat sb;
 
-        int pathLocation = 1;
+        //int pathLocation = 1;
         bool exist = false;
         bool exist2 = false;
 
         string temp;
 
+        //cout << args[1] << endl;
         temp.append( args[1] );
 
-        if ( temp[0] != '-'  || temp[1] == 'e' )
-        {
-            if ( temp[1] == 'e' )
-                pathLocation = 2;
+        // defualt argument ( -e ) if exist
+        if ( temp[0] != '-' )
+        {   
+            //cout << args[pathLocation] << endl;
 
-
-            exist = ( stat( args[pathLocation], &sb ) == 0 );
+            exist = ( stat( args[1], &sb ) == 0 );
 
             if ( exist )
                 cout << "(True)" << endl;
@@ -123,6 +132,7 @@ bool cmdExecutable::execute()
             return exist;
         }
 
+        // this section is for arguemetns -e -f -d
         else
         {
 
@@ -130,19 +140,27 @@ bool cmdExecutable::execute()
 
             if ( exist )
             {
-               if ( temp[1] == 'f' )
-                   exist2 = S_ISREG( sb.st_mode );
+                if ( temp[1] == 'e' )
+                {
+                    cout << "(True)" << endl;
+                    return exist;
+                }
 
-               else if ( temp[1] == 'd' )
-                   exist2 = S_ISDIR( sb.st_mode );
+                // regular file
+                else if ( temp[1] == 'f' )
+                    exist2 = S_ISREG( sb.st_mode );
 
-               if ( exist2 )
-                   cout << "(True)" << endl;
+                // directory 
+                else if ( temp[1] == 'd' )
+                    exist2 = S_ISDIR( sb.st_mode );
 
-               else
-                   cout << "(False)" << endl;
+                if ( exist2 )
+                    cout << "(True)" << endl;
 
-               return exist2;
+                else
+                    cout << "(False)" << endl; 
+
+                return exist2;
             }
 
             else
@@ -153,7 +171,6 @@ bool cmdExecutable::execute()
             }
 
         }
-
 
     }
     // if the current command is exit
