@@ -243,16 +243,7 @@ cmdBase* parse(char* input)
     for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
     {
         char* wrdPtr = *it;
-        int i = 0;
-        while (wrdPtr[i] == ' ')
-        {
-            i++;
-        }
-        if (wrdPtr[i] == '\0')
-        {
-            cout << "Error: empty command found" << endl;
-            return NULL;
-        }
+       
         if (strcmp(wrdPtr, "&&") == 0 || strcmp(wrdPtr, "||") == 0 
             || strcmp(wrdPtr, ";") == 0)
         {
@@ -274,9 +265,17 @@ cmdBase* parse(char* input)
         {
             numOfRP++;
         }
-        else 
+        else
         {
-            rptCmdCheck = 0;
+            int i = 0;
+            while (wrdPtr[i] == ' ')
+            {
+                i++;
+            }
+            if (wrdPtr[i] != '\0')
+            {
+               rptCmdCheck = 0;
+            }
         }
     }
     if (numOfRP != numOfLP)
