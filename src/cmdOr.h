@@ -11,6 +11,11 @@ class cmdOr: public cmdBase
         cmdBase* right;
     public:
         cmdOr(cmdBase* l, cmdBase* r): left(l), right(r) {};
+        ~cmdOr()
+        {
+            delete left;
+            delete right;
+        }
         bool execute()
         {
             if(left->execute())

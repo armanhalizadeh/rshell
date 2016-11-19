@@ -35,8 +35,14 @@ cmdExecutable::cmdExecutable(char* command)
     args[i] = NULL;
 }
 
-//cmdExecutable::~cmdExecutable()
-//{}
+cmdExecutable::~cmdExecutable()
+{
+    int i = 0;
+    while (args[i] != 0)
+    {
+        delete args[i];
+    }
+}
 
 bool cmdExecutable::execute()
 {
