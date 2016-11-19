@@ -37,6 +37,7 @@ int main()
             {
                 head->execute( );
             }
+
             //delete userInput;
             //delete head;
         }
@@ -91,6 +92,7 @@ char* getInput()
     }
 
     input[temp.size()] = '\0'; //adds NULL to end of char array
+
     return input;
 }
 
@@ -104,6 +106,7 @@ cmdBase* parse(char* input)
     char* cmdPtr;
 
     cmdPtr = strtok(input, ";");
+
     while (cmdPtr != NULL)
     {
         vInfix.push_back(cmdPtr);
@@ -113,6 +116,7 @@ cmdBase* parse(char* input)
         vInfix.push_back(temp);
         cmdPtr = strtok(NULL, ";");
     }
+
     if (*vInfix.back() == ';')
     {
         vInfix.pop_back();
@@ -122,6 +126,7 @@ cmdBase* parse(char* input)
     {
         cmdPtr = strtok(*it, "&");
         char* cmdPtr2 = strtok(NULL, "");
+      
         if (cmdPtr2 != NULL)
         {
            cmdPtr2 += 1;
@@ -138,6 +143,7 @@ cmdBase* parse(char* input)
                vInfix.push_back(cmdPtr2);
                it++;
            }
+          
            else
            {
                vInfix.insert(it, temp);
@@ -150,6 +156,7 @@ cmdBase* parse(char* input)
     {
         cmdPtr = strtok(*it, "|");
         char* cmdPtr2 = strtok(NULL, "");
+
         if (cmdPtr2 != NULL)
         {
            cmdPtr2 += 1;
@@ -159,6 +166,7 @@ cmdBase* parse(char* input)
            temp[1] = '|';
            temp[2] = '\0';
            it++;
+
            if(it == vInfix.end())
            {
                it--;
@@ -166,6 +174,7 @@ cmdBase* parse(char* input)
                vInfix.push_back(cmdPtr2);
                it++;
            }
+           
            else
            {
                vInfix.insert(it, temp);
@@ -178,10 +187,12 @@ cmdBase* parse(char* input)
     {
         char* c = *it;
         int i = 0;
+
         while (c[i] == ' ')
         {
             i++;
         }
+
         if (c[i] == '(')
         {
            char* temp = new char[2];
@@ -198,46 +209,56 @@ cmdBase* parse(char* input)
     for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
     {
         char* c =  strpbrk(*it, ")");
+        
         if (c != NULL)
         {
             c[0] = '\0';
             int i = 1;
+            
             while (c[i] == ' ')
             {
                 i++;
             }
+
             if (c[i] != '\0')
             {
                 c += i;
                 it++;
+                
                 if (it == vInfix.end())
                 {
                     it--;
                     vInfix.push_back(c);
                     it++;
                 }
+
                 else
                 {
                     vInfix.insert(it, c);
                 }
+
                 it--;
             }
+
             char* temp = new char[2];
             temp[0] = ')';
             temp[1] = '\0';
             it++;
+
             if (it == vInfix.end())
             {
                 it--;
                 vInfix.push_back(temp);
                 it++;
             }
+            
             else
             {
                 vInfix.insert(it, temp);
             }
         }
     }
+
 
     int numOfLP = 0, numOfRP = 0, rptCmdCheck = 0;
     for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
@@ -287,9 +308,11 @@ cmdBase* parse(char* input)
     vector<char*> vPostfix = infixToPostfix(vInfix);
 
     stack<cmdBase*> cmdStack;
+
     for (int i = 0, n = vPostfix.size(); i < n; i++)
     {
         cmdBase* temp;
+
         if (strcmp(vPostfix.at(i), "&&") == 0) 
         {
             cmdBase* right = cmdStack.top();
@@ -298,6 +321,7 @@ cmdBase* parse(char* input)
             cmdStack.pop();
             temp = new cmdAnd(left, right);
         }
+
         else if (strcmp(vPostfix.at(i), "||") == 0) 
         {
             cmdBase* right = cmdStack.top();
@@ -306,6 +330,7 @@ cmdBase* parse(char* input)
             cmdStack.pop();
             temp = new cmdOr(left, right);
         }
+
         else if (strcmp(vPostfix.at(i), ";") == 0) 
         {
             cmdBase* right = cmdStack.top();
@@ -314,10 +339,12 @@ cmdBase* parse(char* input)
             cmdStack.pop();
             temp = new cmdSemi(left, right);
         }
+
         else
         {
             temp = new cmdExecutable(vPostfix.at(i));
         }
+        
         cmdStack.push(temp);
     }
 
@@ -328,24 +355,30 @@ vector<char*> infixToPostfix(list<char*> vInfix)
 {
     stack<char*> cntrStack;
     vector<char*> vPostfix;
+
     char* wrdPtr;
+
     for (list<char*>::iterator it = vInfix.begin(); it != vInfix.end(); it++)
     {
         wrdPtr = *it; 
+
         if (strcmp(wrdPtr, "&&") == 0 || strcmp(wrdPtr, "||") == 0 
             || strcmp(wrdPtr, ";") == 0 || strcmp(wrdPtr, "(") == 0
             || strcmp(wrdPtr, ")") == 0) {
+
             if (strcmp(wrdPtr, "(") == 0)
             {
                 cntrStack.push(wrdPtr);
             }
+
             else if (strcmp(wrdPtr, ")") == 0)
-                    {
+            {
                 while (strcmp(cntrStack.top(), "(") != 0)
                 {
                     vPostfix.push_back(cntrStack.top());
                     cntrStack.pop();
                 }
+
                 cntrStack.pop();
             }
 
@@ -358,22 +391,27 @@ vector<char*> infixToPostfix(list<char*> vInfix)
                     {
                         break;
                     }
+
                     vPostfix.push_back(cntrStack.top());
                     cntrStack.pop();
                 }
+
                 cntrStack.push(wrdPtr);
             }
         }
+
         else
         {
             vPostfix.push_back(wrdPtr);
         }
     }
+
     while (!cntrStack.empty())
     {
         vPostfix.push_back(cntrStack.top());
         cntrStack.pop();
     }
+
     return vPostfix;
 }
     
@@ -384,9 +422,11 @@ int priority(char* c)
     {
         return 3;
     }
+
     else if (strcmp(c, ";") == 0)
     {
         return 1;
     }
+
     return 2;
 }

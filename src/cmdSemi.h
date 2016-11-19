@@ -18,8 +18,16 @@ class cmdSemi: public cmdBase
         }
         bool execute()
         {
+            if ( left == NULL )
+                return false;
+
             left->execute();
+
+            if ( right == NULL )
+                return false;
+
             right->execute();
+
             return true;
         }
 };
