@@ -83,6 +83,8 @@ bool cmdExecutable::execute()
 
             else
                 cout << "(False)" << endl;
+
+            return exist;
         }
 
         else
@@ -90,35 +92,30 @@ bool cmdExecutable::execute()
 
             exist = ( stat( args[2], &sb ) == 0 );
 
-            if ( temp[1] == 'f' )
+            if ( exist )
             {
-                if ( exist )
-                {
-                    exist2 = S_ISREG( sb.st_mode );
+               if ( temp[1] == 'f' )
+                   exist2 = S_ISREG( sb.st_mode );
 
-                    if ( exist2 )
-                        cout << "(True)" << endl;
+               else if ( temp[1] == 'd' )
+                   exist2 = S_ISDIR( sb.st_mode );
 
-                    else
-                        cout << "(False)" << endl;
-                }
+               if ( exist2 )
+                   cout << "(True)" << endl;
+
+               else
+                   cout << "(False)" << endl;
+
+               return exist2;
             }
 
-            else if ( temp[1] == 'd' )
+            else
             {
-                if ( exist )
-                {
-                    exist2 = S_ISDIR( sb.st_mode );
+                cout << "(False)" << endl;
 
-                    if ( exist2 )
-                        cout << "(True)" << endl;
-
-                    else
-                        cout << "(False)" << endl;
-                  
-                }
-
+                return exist;
             }
+
         }
 
     }
