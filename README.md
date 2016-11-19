@@ -42,9 +42,9 @@ it exist. The following are example formats to the `test` command.
     [ -d directory/ ]
     test -e directory/file
 
-The `test` command has the following arguments: `-e`, `-d` and `-r`. The `-e` argument is used by defualt when
+The `test` command has the following arguments: `-e`, `-d` and `-f`. The `-e` argument is used by defualt when
 there is no argument provided. The argument tells test to check wheter the file/directory exist. The `-d` argument
-tells test to check if the file/directory that user inputs is a directory. While `-r` checks if the specificed file/directory is a regular file.
+tells test to check if the file/directory that user inputs is a directory. While `-f` checks if the specificed file/directory is a regular file.
 
 Notice the example, `[ main.cpp ]`, The brackets act as an alias to test. In order for the alias to work it has to have the opening bracket `[` and the closing bracket `]`.
 

@@ -99,8 +99,10 @@ char* getInput()
 //creates tree of command connectors by parsing the entered line
 cmdBase* parse(char* input)
 {
-    if ( input[0] == '\0' || input[0] == ';' )
+    if ( input[0] == '\0' || input[0] == '#' )
         return NULL;
+
+    input = strtok(input, "#");
 
     list<char*> vInfix;
     char* cmdPtr;
