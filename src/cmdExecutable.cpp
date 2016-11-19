@@ -68,16 +68,22 @@ bool cmdExecutable::execute()
         {
             argNum++;
         }
-        if (argNum == 4)
+        if ((executable[0] == '[' && argNum == 4) 
+                || (strcmp(executable, "test") == 0 && argNum == 3) )
         {
             if (strcmp(args[1], "-e") != 0 && strcmp(args[1], "-f") != 0 
                     && strcmp(args[1], "-d") != 0)
             {
-                cout << "Error: unexpected argument '" << args[2] << "'" << endl;
+                cout << "Error: unexpected argument '" << args[1] << "'" << endl;
                 return false;
             }
-        }    
-        
+        }
+        else if ((executable[0] == '[' && (argNum > 4 || argNum < 3)) 
+                || (strcmp(executable, "test") == 0 && (argNum < 2 || argNum > 3)) )
+        {
+            cout << "Error: unexpected number of arguments" << endl;
+            return false;
+        }
 
         if ( executable[0] == '[' )
         {
