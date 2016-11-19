@@ -55,18 +55,41 @@ bool cmdExecutable::execute()
         return true;
     }
  
+    unsigned int lastPos = 0;
+
+    for ( ; args[lastPos] != '\0'; lastPos++ ){}
+    lastPos--;
+    
 
     if ( strcmp( executable, "test" ) == 0 || strcmp( executable, "[" ) == 0)
     {
-        //cout << "input is test" << endl;
-        
-        if (strcmp(args[0], "[") == 0 && (args[2] == NULL || (args[3] == NULL 
-             && strcmp(args[2], "]") != 0) 
-             || (args[3] != NULL && strcmp(args[3], "]") != 0)))
+        int argNum = 0;
+        while (args[argNum] != NULL)
         {
-            cout << "Error: missing ']'" << endl;
-            return false;
+            argNum++;
         }
+        if (argNum == 4)
+        {
+            if (strcmp(args[1], "-e") != 0 && strcmp(args[1], "-f") != 0 
+                    && strcmp(args[1], "-d") != 0)
+            {
+                cout << "Error: unexpected argument '" << args[2] << "'" << endl;
+                return false;
+            }
+        }    
+        
+
+        if ( executable[0] == '[' )
+        {
+            if ( strcmp( args[ lastPos], "]") != 0 )
+            {
+                cout << "Error: missing ']' " << endl;
+
+                return false;
+            }   
+        } 
+
+
         struct stat sb;
 
         int pathLocation = 1;
@@ -86,16 +109,12 @@ bool cmdExecutable::execute()
             exist = ( stat( args[pathLocation], &sb ) == 0 );
 
             if ( exist )
-            {
                 cout << "(True)" << endl;
-                return true;
-            }
 
             else
-            {
                 cout << "(False)" << endl;
-                return false;
-            }
+
+            return exist;
         }
 
         else
@@ -103,57 +122,32 @@ bool cmdExecutable::execute()
 
             exist = ( stat( args[2], &sb ) == 0 );
 
-            if ( temp[1] == 'f' )
+            if ( exist )
             {
-                if ( exist )
-                {
-                    exist2 = S_ISREG( sb.st_mode );
+               if ( temp[1] == 'f' )
+                   exist2 = S_ISREG( sb.st_mode );
 
-                    if ( exist2 )
-                    {
-                        cout << "(True)" << endl;
-                        return true;
-                    }
-                    else
-                    {
-                        cout << "(False)" << endl;
-                        return false;
-                    }
-                }
-                else
-                {
-                    cout << "(False)" << endl;
-                    return false;
-                }
+               else if ( temp[1] == 'd' )
+                   exist2 = S_ISDIR( sb.st_mode );
+
+               if ( exist2 )
+                   cout << "(True)" << endl;
+
+               else
+                   cout << "(False)" << endl;
+
+               return exist2;
             }
 
-            else if ( temp[1] == 'd' )
+            else
             {
-                if ( exist )
-                {
-                    exist2 = S_ISDIR( sb.st_mode );
+                cout << "(False)" << endl;
 
-                    if ( exist2 )
-                    {
-                        cout << "(True)" << endl;
-                        return true;
-                    }
-
-                    else
-                    {
-                        cout << "(False)" << endl;
-                        return false;
-                    }
-                  
-                }
-                else
-                {
-                    cout << "(False)" << endl;
-                    return false;
-                }
-
+                return exist;
             }
+
         }
+
 
     }
     // if the current command is exit
