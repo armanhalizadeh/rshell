@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <string.h>
 #include <unistd.h>
@@ -51,10 +52,24 @@ void printPrompt()
     char *User;
     char host[30];
 
+    long size = 100;
+    char *loc;
+    char *buf;
+
+    buf = (char *)malloc((size_t)size);
+    loc = getcwd( buf, 100 );
+
+    //cout << buf << endl;
     User = getlogin( );
     gethostname( host, 30 );
 
-    cout << User << "@" << host << "$ ";
+    cout << User << "@" << host << ":" << loc << " $ ";
+ 
+    // The following allows for changing directory
+    //int ret;
+    //chdir( "src" );
+    //cout << User << "@" << host << ":" << loc << " $ ";
+
 }
 
 

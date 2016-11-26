@@ -173,6 +173,63 @@ bool cmdExecutable::execute()
         }
 
     }
+
+    else if ( strcmp( executable, "cd" ) == 0 )
+    {
+
+        int status;
+        // getenv setenv - PWD OLDPWD
+        //cout << args[1] << endl;
+
+        char* location = args[1];
+        //string location;
+ 
+        char* tempLocation = getenv( "PWD" );
+
+        if( args[1] == '\0' )
+        {
+            cout << " empty " << endl;
+            location = getenv( "HOME" );
+            //cout << location << endl;
+        } 
+
+        else if ( strcmp( args[1], "-" ) == 0  )
+        {
+            //cout << " - " << endl;
+            location = getenv( "OLDPWD" );
+        }
+
+        status = chdir( location );
+ 
+        if ( status == 0 )
+        {
+            if ( args[1] != NULL )
+            {
+                if ( strcmp( args[1], ".." ) == 0 )
+                {
+                    char *buf;
+                    long size = 100;
+                    buf = (char *)malloc((size_t)size);
+                    setenv( "PWD", getcwd( buf, 100 ), 1 );
+                }
+
+                else
+                    setenv( "PWD", location, 1 );
+
+            }
+
+            else
+                setenv( "PWD", location, 1 );
+
+            setenv( "OLDPWD", tempLocation, 1 );
+        }
+
+        // FOR DEBUGGING
+        //cout << "\tPWD: " <<  getenv( "PWD" ) << endl;
+        //cout << "\tOLDPWD: " << getenv( "OLDPWD" ) << endl;
+
+        return true;
+    }
     // if the current command is exit
     // the following with exit the rshell
 
