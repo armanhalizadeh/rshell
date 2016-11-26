@@ -182,15 +182,13 @@ bool cmdExecutable::execute()
         //cout << args[1] << endl;
 
         char* location = args[1];
-        //string location;
  
         char* tempLocation = getenv( "PWD" );
 
         if( args[1] == '\0' )
         {
-            cout << " empty " << endl;
+            //cout << " empty " << endl;
             location = getenv( "HOME" );
-            //cout << location << endl;
         } 
 
         else if ( strcmp( args[1], "-" ) == 0  )
