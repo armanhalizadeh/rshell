@@ -174,6 +174,7 @@ bool cmdExecutable::execute()
 
     }
 
+    // if the executable command start is cd
     else if ( strcmp( executable, "cd" ) == 0 )
     {
 
@@ -181,45 +182,71 @@ bool cmdExecutable::execute()
         // getenv setenv - PWD OLDPWD
         //cout << args[1] << endl;
 
+        // Gets the argument for cd
         char* location = args[1];
  
+        // tempLocation is used when the argument is a path
         char* tempLocation = getenv( "PWD" );
 
+        // if the argument is empty
+        // therefore go home directory
         if( args[1] == '\0' )
         {
             //cout << " empty " << endl;
             location = getenv( "HOME" );
         } 
 
+        // if the argument is -
+        // then go to the oldpwd
         else if ( strcmp( args[1], "-" ) == 0  )
         {
             //cout << " - " << endl;
             location = getenv( "OLDPWD" );
         }
 
+        // change the directory
+        // status is used to check if the directory was changed
+        // because chdir returns an integer value 0 for location
+        // exist and -1 for location does not exist
         status = chdir( location );
  
         if ( status == 0 )
         {
+            // if input is not solely cd ;
             if ( args[1] != NULL )
             {
+                // if the argument is go to parent directory
                 if ( strcmp( args[1], ".." ) == 0 )
                 {
+                    // I am unaware of a different way to handle this 
+                    // particular case in order to get the parent directory
+                    // of the current directory
+                    
                     char *buf;
                     long size = 100;
                     buf = (char *)malloc((size_t)size);
                     setenv( "PWD", getcwd( buf, 100 ), 1 );
+
                 }
 
+                // - ?
                 else
                     setenv( "PWD", location, 1 );
 
             }
 
+            // go to home directory
             else
                 setenv( "PWD", location, 1 );
 
+            // the previous working directory
             setenv( "OLDPWD", tempLocation, 1 );
+        }
+
+        else
+        {
+            // may havew to change to perror
+            cout << location << " is not a directory " << endl;
         }
 
         // FOR DEBUGGING
