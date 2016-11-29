@@ -30,12 +30,8 @@ or not. For the `||` connector the executable to the right of it will only execu
 before the connector fails. Lastly the `;` connector acts as a breakpoint. Any of the executables 
 will run regardless of its status.
 
-
-## New
-
-The following command `test` is a new addition to **rshell**. The command can be used to check
-if a file or directory exist. The command will output either `(True)` or `(False)` in regards to whether 
-it exist. The following are example formats to the `test` command.
+The command test can be used to check if a file or directory exist. The command will output either 
+`(True)` or `(False)` in regards to whether it exist. The following are example formats to the `test` command.
 
     test main.cpp
     [ main.cpp ]
@@ -48,7 +44,19 @@ tells test to check if the file/directory that user inputs is a directory. While
 
 Notice the example, `[ main.cpp ]`, The brackets act as an alias to test. In order for the alias to work it has to have the opening bracket `[` and the closing bracket `]`.
 
-Another new feature is the use of `( )` in order to give a specified command(s) priority to its overall return truth value. The `( )` does not give priority in the sense of displaying its result, but rather it groups the overall return value of mutliple commands.
+The use of `( )` gives a specified command(s) priority to its overall return truth value. The `( )` does not give priority in the sense of displaying its result, but rather it groups the overall return value of mutliple commands.
+
+## New
+
+New in **rshell** is the cd command. The cd command will change the current working directory to whatever directory is specified. There are three uses of this command
+    cd <PATH>
+    cd
+    cd -
+
+cd <PATH> changes the working directory to the directory specified in path.
+cd changes the working directory to the users HOME directory
+cd - changes the working directory to the previous working directory
+cd .. can be used to to go up a level in the working directory
 
 ## Bugs
 
