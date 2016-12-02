@@ -241,6 +241,7 @@ bool cmdExecutable::execute()
 
             // the previous working directory
             setenv( "OLDPWD", tempLocation, 1 );
+            return true;
         }
 
         else
@@ -252,8 +253,7 @@ bool cmdExecutable::execute()
         // FOR DEBUGGING
         //cout << "\tPWD: " <<  getenv( "PWD" ) << endl;
         //cout << "\tOLDPWD: " << getenv( "OLDPWD" ) << endl;
-
-        return true;
+        return false;
     }
     // if the current command is exit
     // the following with exit the rshell
